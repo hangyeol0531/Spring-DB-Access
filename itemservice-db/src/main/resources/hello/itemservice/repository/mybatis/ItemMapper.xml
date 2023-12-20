@@ -27,6 +27,7 @@
         from item
 
         -- where안에 있는 if가 1개라도 성공하면 where 문장을 만들어준다
+        -- add가 먼저 시작되면 add를 지운다.
         <where>
             <if test="itemName != null and itemName != ''">
                 and item_name like concat('%', #{itemName}, '%')
