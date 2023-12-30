@@ -29,7 +29,7 @@ public class BasicTxTest {
     }
 
     @Test
-    void commit(){
+    void commit() {
         log.info("start transaction");
         TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
 
@@ -39,7 +39,7 @@ public class BasicTxTest {
     }
 
     @Test
-    void rollback(){
+    void rollback() {
         log.info("start transaction");
         TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
 
@@ -49,7 +49,7 @@ public class BasicTxTest {
     }
 
     @Test
-    void double_commit(){
+    void double_commit() {
         log.info("start transaction1");
         TransactionStatus tx1 = txManager.getTransaction(new DefaultTransactionDefinition());
         log.info("start transaction1 commit");
@@ -63,7 +63,7 @@ public class BasicTxTest {
     }
 
     @Test
-    void double_commit_rollback(){
+    void double_commit_rollback() {
         log.info("start transaction1");
         TransactionStatus tx1 = txManager.getTransaction(new DefaultTransactionDefinition());
         log.info("start transaction1 commit");
@@ -73,6 +73,22 @@ public class BasicTxTest {
         TransactionStatus tx2 = txManager.getTransaction(new DefaultTransactionDefinition());
         log.info("start transaction2 rollback");
         txManager.rollback(tx2);
+    }
+
+    @Test
+    void inner_commit() {
+        log.info("outer transaction start");
+        TransactionStatus outer = txManager.getTransaction(new DefaultTransactionDefinition());
+        log.info("outer.isNetTransaction()={}", outer.isNewTransaction());
+
+        log.info("inner transaction start");
+        TransactionStatus inner = txManager.getTransaction(new DefaultTransactionDefinition());
+        log.info("inner.isNetTransaction()={}", inner.isNewTransaction());
+        log.info("inner transaction commit");
+        txManager.commit(inner);
+
+        log.info("outer transaction commit");
+        txManager.commit(outer);
     }
 
 }
